@@ -12,28 +12,43 @@ var connection = mysql.createConnection({
 
   // Your password
   password: "Salzgasse4%",
-  database: "top_songsDB"
+  database: "bamazon"
 });
 
 connection.connect(function(err) {
   if (err) throw err;
-  runSearch();
+  showAll();
 });
 
-function runSearch() {
+
+function showAll (){
+  connection.query("SELECT * FROM products", function(err, res) {
+
+    if (err) throw err;
+    //for (var i = 0; i < res.length; i++) {
+      //console.log("Position: " + res[i].position + " || Song: " + res[i].song + " || Year: " + res[i].year);
+      console.table(res);
+      runSearch(res);
+    });
+    
+}
+
+function runSearch(res) {
+  
+  var choicesArray = [];
+  for (var i = 0; i < res.length; i++) {
+    choicesArray[i] = res[i].product_name;
+  }
   inquirer
-    .prompt({
+    .prompt(
+      {
       name: "action",
       type: "rawlist",
-      message: "What would you like to do?",
-      choices: [
-        "Find songs by artist",
-        "Find all artists who appear more than once",
-        "Find data within a specific range",
-        "Search for a specific song",
-        "Find artists with a top song and top album in the same year"
-      ]
-    })
+      message: "What would you like to buy?",
+      //ASK TA'S HOW TO SET UP A LOOP
+      choices: choicesArray
+    }
+    )
     .then(function(answer) {
       switch (answer.action) {
       case "Find songs by artist":
@@ -116,7 +131,8 @@ function rangeSearch() {
     .then(function(answer) {
       var query = "SELECT position,song,artist,year FROM top5000 WHERE position BETWEEN ? AND ?";
       connection.query(query, [answer.start, answer.end], function(err, res) {
-        for (var i = 0; i < res.length; i++) {
+       // for (var i = 0; i < res.length; i++) 
+        {
           console.log(
             "Position: " +
               res[i].position +
