@@ -42,33 +42,62 @@ function runSearch(res) {
     //console.log("Product name is " + res[i].product_name);
     choicesArray[i] = res[i].product_name;
   }
-  inquirer
-    .prompt(
+  inquirer.prompt([
       {
       type: "rawlist",
       name: "itemName",
       message: "What would you like to buy?",
       //ASK TA'S HOW TO SET UP A LOOP
       choices: choicesArray
-    }
-    )
-    .then(function(val) {
-      console.log("val is " + val);
-      console.log("choice is "+ val.itemName);
-      inquirer
-    .prompt(
+    },
       {
-      name: "quantity",
       type: "number",
+      name: "quantity",
       message: "How many do you want to buy? ", 
       choices: choicesArray
-    })
-    //new code below here. 6/3
-   
-    
-    //new code above here. 6/3
-})
+    }]).then(function(answer){
+      console.log("The chosen item is " + answer.itemName);
+      console.log("The number of chosen item is " + answer.quantity);
 
+    })
+    //console.log("The chosen item is " + answer.itemName);
+  /*  .then(function(answer) {
+      // get the information of the chosen item
+      var chosenItem;
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].item_name === answer.choice) {
+          chosenItem = results[i];
+        }
+      }
+
+      // determine if bid was high enough
+      if (chosenItem.highest_bid < parseInt(answer.bid)) {
+        // bid was high enough, so update db, let the user know, and start over
+        connection.query(
+          "UPDATE auctions SET ? WHERE ?",
+          [
+            {
+              highest_bid: answer.bid
+            },
+            {
+              id: chosenItem.id
+            }
+          ],
+          function(error) {
+            if (error) throw err;
+            console.log("Bid placed successfully!");
+            start();
+          }
+        );
+      }
+      else {
+        // bid wasn't high enough, so apologize and start over
+        console.log("Your bid was too low. Try again...");
+        start();
+      }
+    });
+    */
+}
 /*function processOrder(item) {
   inquirer
     .prompt(
@@ -86,4 +115,4 @@ function runSearch(res) {
     });
     */
 
-}
+
