@@ -28,9 +28,14 @@ function showAll (){
   connection.query("SELECT * FROM products", function(err, res) {
 
     if (err) throw err;
-    console.log(res);
+    //console.log(res);
       console.table(res);
       runSearch(res);
+   /*if(answer.quantity&&answer.itemName){
+      console.log("We will ship you " + answer.quantity + " " + answer.itemName);
+      console.log("Your total price is $" + parseInt(answer.quantity * chosenItem.price));
+    }
+    */
     });
     
 }
@@ -86,8 +91,7 @@ function runSearch(res) {
             ],
             function(error) {
               if (error) throw err;
-              //console.log("We will ship you " + answer.quantity + " " + answer.itemName);
-              //showAll();
+              showAll();
               console.log("We will ship you " + answer.quantity + " " + answer.itemName);
               console.log("Your total price is $" + parseInt(answer.quantity * chosenItem.price));
             }
@@ -95,7 +99,7 @@ function runSearch(res) {
         }
         else {
           console.log("Sorry. We don't have enough.  Try again...");
-          //showAll();
+          showAll();
         }
     })
   });
