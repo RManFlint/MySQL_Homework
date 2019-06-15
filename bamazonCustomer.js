@@ -55,10 +55,47 @@ function runSearch(res) {
       name: "quantity",
       message: "How many do you want to buy? ", 
       choices: choicesArray
-    }]).then(function(answer){
+      }
+  ]).then(function(answer){
       console.log("The chosen item is " + answer.itemName);
       console.log("The number of chosen item is " + answer.quantity);
-      
+      var chosenItem;
+        for (var i = 0; i < res.length; i++) {
+          if (res[i].product_name === answer.itemName) {
+            chosenItem = res[i];
+            console.log("chosenItem is " + chosenItem.product_name);            
+          }
+        }
+
+        // determine if bid was high enough
+        if (chosenItem.in_stock >= parseInt(answer.quantity)) {
+          // bid was high enough, so update db, let the user know, and start over
+          var newQuantity = parseInt(chosenItem.in_stock - answer.quantity);
+          console.log("The NEW QUANTITY, AFTER subtracting order is " + newQuantity);
+          console.log("chosenItem.id is " + chosenItem.item_id);
+          connection.query(
+            "UPDATE products SET ? WHERE ?",
+            [
+              {
+                in_stock: newQuantity
+              },
+              {
+                //product_name: chosenItem.product_name
+                item_id: chosenItem.item_id
+              }
+            ],
+            function(error) {
+              if (error) throw err;
+              //console.log("We will ship you " + answer.quantity + " " + answer.itemName);
+              //showAll();
+              console.log("We will ship you " + answer.quantity + " " + answer.itemName);
+            }
+          );
+        }
+        else {
+          console.log("Sorry. We don't have enough.  Try again...");
+          //showAll();
+        }
     })
   });
 
