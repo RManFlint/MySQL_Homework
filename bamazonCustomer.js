@@ -89,6 +89,7 @@ function runSearch(res) {
               //console.log("We will ship you " + answer.quantity + " " + answer.itemName);
               //showAll();
               console.log("We will ship you " + answer.quantity + " " + answer.itemName);
+              console.log("Your total price is $" + parseInt(answer.quantity * chosenItem.price));
             }
           );
         }
